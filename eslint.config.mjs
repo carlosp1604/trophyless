@@ -22,7 +22,7 @@ export default tseslint.config(
   tseslint.configs.recommended,
   eslintPluginAstro.configs.recommended,
   {
-    files: [ '**/*.{tsx,jsx,mjs,cjs,js,ts,astro}' ],
+    files: ['**/*.{tsx,jsx,mjs,cjs,js,ts,astro}'],
     languageOptions: { ecmaVersion: 'latest', globals: globals.browser },
     plugins: {
       import: importPlugin,
@@ -30,18 +30,10 @@ export default tseslint.config(
       '@stylistic': stylistic,
     },
     rules: {
-      // @stylistic
-      '@stylistic/array-bracket-spacing': [ 'error', 'always' ],
-      '@stylistic/object-curly-spacing': [ 'error', 'always' ],
+      '@stylistic/object-curly-spacing': ['error', 'always'],
       '@stylistic/type-annotation-spacing': 'error',
-      '@stylistic/quotes': [ 'error', 'single' ],
-      '@stylistic/semi': [ 'error', 'never' ],
-      '@stylistic/indent': [ 'error', 2 ],
-      '@stylistic/max-len': [ 'error', { code: 136 } ],
-      '@stylistic/key-spacing': [ 'error', { beforeColon: false, afterColon: true } ],
-
-
-      // imports
+      '@stylistic/quotes': ['error', 'single'],
+      '@stylistic/semi': ['error', 'never'],
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
       'unused-imports/no-unused-imports': 'error',
@@ -58,9 +50,9 @@ export default tseslint.config(
         'warn',
         {
           alphabetize: { caseInsensitive: true, order: 'asc' },
-          groups: [ 'builtin', 'external', 'sibling', 'parent' ],
+          groups: ['builtin', 'external', 'sibling', 'parent'],
           'newlines-between': 'always',
-          pathGroupsExcludedImportTypes: [ 'builtin' ],
+          pathGroupsExcludedImportTypes: ['builtin'],
           pathGroups: [
             {
               group: 'external',
@@ -70,6 +62,10 @@ export default tseslint.config(
           ],
         },
       ],
+      'astro/semi': ['error', 'never'],
+      quotes: ['error', 'single'],
+      indent: ['error', 2],
+      'max-len': ['error', { code: 136 }],
     },
   },
 )
