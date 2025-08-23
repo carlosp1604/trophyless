@@ -1,4 +1,4 @@
-import { DomainException } from '../../Exception/Domain/DomainException.ts'
+import { DomainException } from '~/modules/Exception/Domain/DomainException.ts'
 
 export class RelationshipDomainException extends DomainException{
   public static relationNotLoadedId = 'relationship_relation_not_loaded'

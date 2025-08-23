@@ -1,9 +1,7 @@
 import { TeamAppearance } from './TeamAppearance.ts'
-
-import { Relationship } from '../../Shared/Domain/Relationship.ts'
-import { RelationshipCollection } from '../../Shared/Domain/RelationshipCollection.ts'
-import { Country } from '../Country/Domain/Country.ts'
-
+import { Country } from '~/modules/Country/Domain/Country.ts'
+import { Relationship } from '~/modules/Shared/Domain/Relationship.ts'
+import { RelationshipCollection } from '~/modules/Shared/Domain/RelationshipCollection.ts'
 
 export class Team {
   public readonly id: string

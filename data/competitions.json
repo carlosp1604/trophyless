@@ -1,0 +1,23 @@
+[
+  {
+    "id": "la-liga",
+    "name": "La Liga",
+    "type": "league",
+    "imageUrl": "/competitions/la-liga.png",
+    "countryId": "spain"
+  },
+  {
+    "id": "premier-league",
+    "name": "Premier League",
+    "type": "league",
+    "imageUrl": "/competitions/premier-league.png",
+    "countryId": "england"
+  },
+  {
+    "id": "champions-league",
+    "name": "Champions League",
+    "type": "international",
+    "imageUrl": "/competitions/champions-league.png",
+    "countryId": ""
+  }
+]

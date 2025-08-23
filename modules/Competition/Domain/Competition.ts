@@ -1,7 +1,7 @@
-import { Relationship } from '../../Shared/Domain/Relationship.ts'
-import { RelationshipCollection } from '../../Shared/Domain/RelationshipCollection.ts'
-import { Country } from '../../Team/Country/Domain/Country.ts'
-import { TeamAppearance } from '../../Team/Domain/TeamAppearance.ts'
+import { Country } from '~/modules/Country/Domain/Country.ts'
+import { Relationship } from '~/modules/Shared/Domain/Relationship.ts'
+import { RelationshipCollection } from '~/modules/Shared/Domain/RelationshipCollection.ts'
+import { TeamAppearance } from '~/modules/Team/Domain/TeamAppearance.ts'
 
 export class Competition {
   public readonly id: string

@@ -1,0 +1,30 @@
+[
+  {
+    "type": "Country",
+    "translatableId": "country-es",
+    "field": "name",
+    "language": "en",
+    "value": "Spain"
+  },
+  {
+    "type": "Country",
+    "translatableId": "country-es",
+    "field": "name",
+    "language": "es",
+    "value": "España"
+  },
+  {
+    "type": "Country",
+    "translatableId": "country-en",
+    "field": "name",
+    "language": "en",
+    "value": "England"
+  },
+  {
+    "type": "Country",
+    "translatableId": "country-en",
+    "field": "name",
+    "language": "es",
+    "value": "Inglaterra"
+  }
+]

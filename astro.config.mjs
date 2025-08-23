@@ -1,7 +1,6 @@
 // @ts-check
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'astro/config'
-
 import { i18nConfig } from './i18n.config.ts'
 
 // https://astro.build/config

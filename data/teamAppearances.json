@@ -1,0 +1,52 @@
+[
+  {
+    "id": "ap1",
+    "teamId": "team-001",
+    "competitionId": "la-liga",
+    "lastWin": 2023,
+    "lastSeasonWin": "2022/23",
+    "currentChampion": true,
+    "firstParticipation": 1942,
+    "titlesCount": 12
+  },
+  {
+    "id": "ap2",
+    "teamId": "barcelona",
+    "competitionId": "la-liga",
+    "lastWin": 2022,
+    "lastSeasonWin": "2021/22",
+    "currentChampion": false,
+    "firstParticipation": 1989,
+    "titlesCount": 30
+  },
+  {
+    "id": "ap3",
+    "teamId": "manchester-united",
+    "competitionId": "premier-league",
+    "lastWin": 2023,
+    "lastSeasonWin": "2022/23",
+    "currentChampion": true,
+    "firstParticipation": 1992,
+    "titlesCount": 32
+  },
+  {
+    "id": "ap4",
+    "teamId": "team-002",
+    "competitionId": "premier-league",
+    "lastWin": 2020,
+    "lastSeasonWin": "2019/20",
+    "currentChampion": false,
+    "firstParticipation": 1991,
+    "titlesCount": 34
+  },
+  {
+    "id": "ap5",
+    "teamId": "team-001",
+    "competitionId": "champions-league",
+    "lastWin": 2022,
+    "lastSeasonWin": "2021/22",
+    "currentChampion": false,
+    "firstParticipation": 1982,
+    "titlesCount": 34
+  }
+]

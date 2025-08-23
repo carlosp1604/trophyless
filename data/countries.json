@@ -1,0 +1,27 @@
+[
+  {
+    "id": "country-es",
+    "name": "Spain",
+    "imageUrl": "/flags/spain.png"
+  },
+  {
+    "id": "country-en",
+    "name": "England",
+    "imageUrl": "/flags/england.png"
+  },
+  {
+    "id": "country-de",
+    "name": "Germany",
+    "imageUrl": "/flags/germany.png"
+  },
+  {
+    "id": "country-it",
+    "name": "Italy",
+    "imageUrl": "/flags/italy.png"
+  },
+  {
+    "id": "country-ar",
+    "name": "Argentina",
+    "imageUrl": "/flags/argentina.png"
+  }
+]

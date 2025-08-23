@@ -1,0 +1,37 @@
+[
+  {
+    "id": "team-001",
+    "name": "Real Madrid",
+    "imageUrl": "/images/teams/real-madrid.png",
+    "countryId": "country-es",
+    "relevance": 1
+  },
+  {
+    "id": "team-002",
+    "name": "Liverpool FC",
+    "imageUrl": "/images/teams/liverpool.png",
+    "countryId": "country-en",
+    "relevance": 2
+  },
+  {
+    "id": "team-003",
+    "name": "Boca Juniors",
+    "imageUrl": "/images/teams/boca-juniors.png",
+    "countryId": "country-ar",
+    "relevance": 0
+  },
+  {
+    "id": "team-004",
+    "name": "FC Bayern Munich",
+    "imageUrl": "/images/teams/bayern-munich.png",
+    "countryId": "country-de",
+    "relevance": 3
+  },
+  {
+    "id": "team-005",
+    "name": "AC Milan",
+    "imageUrl": "/images/teams/ac-milan.png",
+    "countryId": "country-it",
+    "relevance": 4
+  }
+]

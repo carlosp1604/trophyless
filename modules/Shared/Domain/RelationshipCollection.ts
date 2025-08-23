@@ -1,5 +1,4 @@
 /* eslint @typescript-eslint/no-empty-object-type: 0 */
-
 import { Relationship } from './Relationship.ts'
 import { RelationshipDomainException } from './RelationshipDomainException.ts'
 

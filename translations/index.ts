@@ -1,8 +1,7 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 import en from './en.json'
 import es from './es.json'
-
-import { i18nConfig, type Locale } from '../i18n.config.ts'
+import { i18nConfig, type Locale } from '~/i18n.config.ts'
 
 const translations: Record<Locale, Record<string, any>> = { en, es }
 
@@ -21,6 +20,7 @@ export function t(lang: Locale, key: string): string {
 export function changeLanguage(lang: Locale) {
   if (!i18nConfig.locales.includes(lang)) {
     console.warn(`Language ${lang} is not supported`)
+
     return
   }
 

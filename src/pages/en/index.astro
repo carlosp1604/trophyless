@@ -1,8 +1,9 @@
 ---
+import { t } from '~/translations'
+// eslint-disable-next-line import/no-relative-parent-imports,no-restricted-imports
 import '../../styles/global.css'
-import LanguageSwitcher from '../../../components/LanguageSwitcher.astro'
-import { i18nConfig } from '../../../i18n.config'
-import { t } from '../../../translations'
+import LanguageSwitcher from '~/src/components/LanguageSwitcher.astro'
+import { i18nConfig } from '~/i18n.config'
 
 const lang = Astro.url.pathname.split('/')[1] as typeof i18nConfig.locales[number]
 ---
@@ -17,6 +18,6 @@ const lang = Astro.url.pathname.split('/')[1] as typeof i18nConfig.locales[numbe
   </head>
   <body>
     <h1>{t(lang, 'home_page_title')}</h1>
-    <LanguageSwitcher client:load currentLang={lang} />
+    <LanguageSwitcher currentLang={lang} />
   </body>
 </html>
