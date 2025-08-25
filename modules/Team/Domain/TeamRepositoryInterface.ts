@@ -17,4 +17,12 @@ export interface TeamRepositoryInterface {
    * @return Team array
    */
   getTeams (offset: number, limit: number): Promise<Array<Team>>
+
+  /**
+    * Get the time without trophy for a team given a competition
+    * @param teamId Team ID
+    * @param competitionId Competition ID
+    * @return Time in milliseconds (epoch millis) since last trophy if found or null
+    */
+  getTimeWithoutTrophy (teamId: string, competitionId: string): Promise<number | null>
 }

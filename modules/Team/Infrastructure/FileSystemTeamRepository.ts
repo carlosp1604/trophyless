@@ -107,4 +107,22 @@ export class FileSystemTeamRepository implements TeamRepositoryInterface {
       TeamModelTranslator.toDomain(raw, [ 'appearances', 'country' ])
     )
   }
+
+  /**
+     * Get the time without trophy for a team given a competition
+     * @param teamId Team ID
+     * @param competitionId Competition ID
+     * @return Time in milliseconds (epoch millis) since last trophy if found or null
+     */
+  public async getTimeWithoutTrophy (teamId: string, competitionId: string): Promise<number | null> {
+    const teamAppearance = appearances.find((appearance) =>
+      appearance.teamId === teamId && appearance.competitionId === competitionId
+    )
+
+    if (!teamAppearance) {
+      return null
+    }
+
+    return teamAppearance.lastWin !== null ? teamAppearance.lastWin : teamAppearance.firstParticipation
+  }
 }
