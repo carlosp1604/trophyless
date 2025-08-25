@@ -4,20 +4,20 @@
     "name": "La Liga",
     "type": "league",
     "imageUrl": "/competitions/la-liga.png",
-    "countryId": "spain"
+    "countryId": "country-es"
   },
   {
     "id": "premier-league",
     "name": "Premier League",
     "type": "league",
     "imageUrl": "/competitions/premier-league.png",
-    "countryId": "england"
+    "countryId": "country-en"
   },
   {
     "id": "champions-league",
     "name": "Champions League",
     "type": "international",
     "imageUrl": "/competitions/champions-league.png",
-    "countryId": ""
+    "countryId": "country-eu"
   }
 ]

@@ -23,5 +23,10 @@
     "id": "country-ar",
     "name": "Argentina",
     "imageUrl": "/flags/argentina.png"
+  },
+  {
+    "id": "country-eu",
+    "name": "Europe",
+    "imageUrl": "/flags/europe.png"
   }
 ]

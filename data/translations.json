@@ -26,5 +26,19 @@
     "field": "name",
     "language": "es",
     "value": "Inglaterra"
+  },
+  {
+    "type": "Country",
+    "translatableId": "country-eu",
+    "field": "name",
+    "language": "es",
+    "value": "Europa"
+  },
+  {
+    "type": "Country",
+    "translatableId": "country-eu",
+    "field": "name",
+    "language": "en",
+    "value": "Europe"
   }
 ]

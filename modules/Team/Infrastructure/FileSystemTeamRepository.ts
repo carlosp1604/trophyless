@@ -72,10 +72,6 @@ export class FileSystemTeamRepository implements TeamRepositoryInterface {
       }
     }
 
-
-    console.log(teamAppearances)
-
-
     countries.forEach(country => {
       const teamCountry = {
         ...country,
@@ -89,7 +85,9 @@ export class FileSystemTeamRepository implements TeamRepositoryInterface {
 
     const total = teams.length
 
-    if (safeOffset >= total) return []
+    if (safeOffset >= total) {
+      return []
+    }
 
     const end = Math.min(total, safeOffset + safeLimit)
     const page = teams.slice(safeOffset, end)
