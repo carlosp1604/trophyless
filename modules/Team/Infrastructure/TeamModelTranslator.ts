@@ -6,10 +6,10 @@ import { Relationship } from '~/modules/Shared/Domain/Relationship.ts'
 import { RelationshipCollection } from '~/modules/Shared/Domain/RelationshipCollection.ts'
 import { Team } from '~/modules/Team/Domain/Team.ts'
 import { TeamAppearance } from '~/modules/Team/Domain/TeamAppearance.ts'
-import type { TeamRepositoryOptions } from '~/modules/Team/Domain/TeamRepositoryInterface.ts'
+import type { TeamRepositoryRelationshipOptions } from '~/modules/Team/Domain/TeamRepositoryInterface.ts'
 
 export class TeamModelTranslator {
-  public static toDomain (rawModel: TeamRawModel, options: Array<TeamRepositoryOptions>): Team {
+  public static toDomain (rawModel: TeamRawModel, options: Array<TeamRepositoryRelationshipOptions>): Team {
     let appearancesCollection: RelationshipCollection<TeamAppearance, TeamAppearance['id']> = RelationshipCollection.notLoaded()
     let countryRelationship: Relationship<Country> = Relationship.notLoaded()
 

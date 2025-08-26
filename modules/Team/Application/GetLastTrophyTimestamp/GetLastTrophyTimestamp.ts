@@ -16,7 +16,7 @@ export class GetLastTrophyTimestamp {
   public async get (
     request: GetLastTrophyTimestampApplicationRequestDto
   ): Promise<Result<number, GetLastTrophyTimestampApplicationError>> {
-    const timeWithoutTrophy = await this.teamRepository.getTimeWithoutTrophy(request.teamId, request.competitionId)
+    const timeWithoutTrophy = await this.teamRepository.getLastWinTimestamp(request.teamId, request.competitionId)
 
     if (!timeWithoutTrophy) {
       return {

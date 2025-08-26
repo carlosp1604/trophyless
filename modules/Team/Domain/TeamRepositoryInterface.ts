@@ -1,6 +1,12 @@
 import type { Team } from './Team.ts'
+import type { Page } from '~/modules/Shared/Domain/Page.ts'
+import type { TeamsPage } from '~/modules/Team/Domain/TeamsPage.ts'
 
-export type TeamRepositoryOptions = 'appearances' | 'country'
+export type TeamRepositoryRelationshipOptions = 'appearances' | 'country'
+
+export type TeamRepositorySortOptions = 'name' | 'lastWin'
+
+export type TeamRepositorySortDirection = 'asc' | 'desc'
 
 export interface TeamRepositoryInterface {
   /**
@@ -11,18 +17,24 @@ export interface TeamRepositoryInterface {
   getTeam (teamId: string): Promise<Team | null>
 
   /**
-   * Get a list of teams given some pagination and filter parameters
-   * @param offset Pagination offset
-   * @param limit Pagination limit
-   * @return Team array
+   * Get a list of teams given a TeamsPage
+   * @param criteria Team Criteria
+   * @return Teams page
    */
-  getTeams (offset: number, limit: number): Promise<Array<Team>>
+  getTeams (criteria: TeamsPage): Promise<Page<Team>>
 
   /**
-    * Get the time without trophy for a team given a competition
+    * Get the timestamp of the team's most recent win in the given competition.
     * @param teamId Team ID
     * @param competitionId Competition ID
-    * @return Time in milliseconds (epoch millis) since last trophy if found or null
+    * @return Timestamp (epoch millis, UTC) of the most recent win, or null if the team has never won this competition.
     */
-  getTimeWithoutTrophy (teamId: string, competitionId: string): Promise<number | null>
+  getLastWinTimestamp (teamId: string, competitionId: string): Promise<number | null>
+
+  /**
+    * Get a list of the most popular teams
+    * V1 -> Hardcoded team list
+    * @return Team array
+    */
+  getPopularTeams (): Promise<Array<Team>>
 }

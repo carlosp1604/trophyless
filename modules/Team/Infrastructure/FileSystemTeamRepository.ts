@@ -6,9 +6,76 @@ import appearances from '~/data/teamAppearances.json'
 import teams from '~/data/teams.json'
 import translations from '~/data/translations.json'
 import type { CountryRawModel } from '~/modules/Country/Infrastructure/RawModels/CountryRawModel.ts'
+import type { Page } from '~/modules/Shared/Domain/Page.ts'
 import type { Team } from '~/modules/Team/Domain/Team.ts'
-import type { TeamRepositoryInterface } from '~/modules/Team/Domain/TeamRepositoryInterface.ts'
+import type {
+  TeamRepositoryInterface,
+  TeamRepositorySortDirection
+} from '~/modules/Team/Domain/TeamRepositoryInterface.ts'
+import type { TeamsPage } from '~/modules/Team/Domain/TeamsPage.ts'
 import { TranslationType } from '~/modules/Translation/Domain/Translation.ts'
+
+const collator = new Intl.Collator('es', { sensitivity: 'base', numeric: true })
+
+const teamAppearancesIdx = new Map<string, TeamAppearanceRawModel[]>()
+
+for (const app of appearances) {
+  const list = teamAppearancesIdx.get(app.teamId)
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  list ? list.push(app) : teamAppearancesIdx.set(app.teamId, [ app ])
+}
+
+const teamLastWin = new Map<string, number | null>()
+
+for (const team of teams) {
+  const teamApps = teamAppearancesIdx.get(team.id) ?? []
+
+  if (teamApps.length === 0) {
+    teamLastWin.set(team.id, null)
+    continue
+  }
+
+  const sorted = [ ...teamApps ].sort((a, b) => {
+    const aLastWin = a.lastWin, B = b.lastWin
+
+    if (aLastWin == null && B == null) return 0
+    if (aLastWin == null) return 1
+    if (B == null) return -1
+
+    return B - aLastWin
+  })
+
+  teamLastWin.set(team.id, sorted[0]?.lastWin ?? null)
+}
+
+
+type TranslationRaw = typeof translations[number]
+const countryTranslationsIdx = new Map<string, TranslationRaw[]>()
+
+for (const tr of translations) {
+  if (tr.type !== TranslationType.COUNTRY) continue
+  const arr = countryTranslationsIdx.get(tr.translatableId)
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  arr ? arr.push(tr) : countryTranslationsIdx.set(tr.translatableId, [ tr ])
+}
+
+const teamCountriesIdx = new Map<string, CountryRawModel>()
+
+for (const c of countries) {
+  teamCountriesIdx.set(c.id, { ...c, translations: countryTranslationsIdx.get(c.id) ?? [] })
+}
+
+const teamsById = new Map<string, TeamRawModel>()
+
+for (const t of teams) {
+  teamsById.set(t.id, {
+    ...t,
+    appearances: teamAppearancesIdx.get(t.id) ?? [],
+    country: teamCountriesIdx.get(t.countryId)
+  })
+}
 
 export class FileSystemTeamRepository implements TeamRepositoryInterface {
   /**
@@ -17,7 +84,7 @@ export class FileSystemTeamRepository implements TeamRepositoryInterface {
    * @return Team if found or null
    */
   public async getTeam (teamId: string): Promise<Team | null> {
-    const team = teams.find((team) => team.id === teamId)
+    const team = teamsById.get(teamId)
 
     if (!team) {
       return null
@@ -45,76 +112,86 @@ export class FileSystemTeamRepository implements TeamRepositoryInterface {
   }
 
   /**
-    * Get a list of teams given some pagination and filter parameters
-    * @param offset Pagination offset
-    * @param limit Pagination limit
-    * @return Team array
+    * Get a list of teams given a TeamsPage
+    * @param criteria Team Criteria
+    * @return Teams page
     */
-  public async getTeams (offset: number, limit: number): Promise<Array<Team>> {
-    const safeOffset = Math.max(0, Math.floor(offset ?? 0))
-    const safeLimit = Math.max(0, Math.floor(limit ?? 0))
+  public async getTeams (criteria: TeamsPage): Promise<Page<Team>> {
+    const { pagination: { offset, limit }, sort, countryId, competitionId } = criteria
 
-    if (safeLimit === 0) {
-      return []
+    let rows = [ ...teams ]
+
+    if (countryId && countryId !== '') {
+      rows = rows.filter(t => t.countryId === countryId)
     }
 
-    const teamAppearances: Map<TeamAppearanceRawModel['teamId'], Array<TeamAppearanceRawModel>> = new Map()
-    const teamCountries: Map<CountryRawModel['id'], CountryRawModel> = new Map()
+    if (competitionId && competitionId !== '') {
+      rows = rows.filter(t => (teamAppearancesIdx.get(t.id) ?? []).some(a => a.competitionId === competitionId))
+    }
 
-    for (const app of appearances) {
-      const key = app.teamId
-      const list = teamAppearances.get(key)
+    rows.sort((a, b) => {
+      if (sort.by === 'lastWin') {
+        const byLast = this.lastWinComparator(a.id, b.id, sort.order)
 
-      if (list) {
-        list.push(app)
+        if (byLast !== 0) {
+          return byLast
+        }
+
+        const byName = this.nameComparator(a.name, b.name, 'asc')
+
+        if (byName !== 0) {
+          return byName
+        }
+
+        return collator.compare(a.id, b.id)
       } else {
-        teamAppearances.set(key, [ app ])
-      }
-    }
+        const byName = this.nameComparator(a.name, b.name, sort.order)
 
-    countries.forEach(country => {
-      const teamCountry = {
-        ...country,
-        translations: translations.filter((translation) =>
-          translation.translatableId === country.id && translation.type === TranslationType.COUNTRY)
-      }
+        if (byName !== 0) {
+          return byName
+        }
 
-      teamCountries.set(country.id, teamCountry)
-    })
+        const byLast = this.lastWinComparator(a.id, b.id, 'desc')
 
+        if (byLast !== 0) {
+          return byLast
+        }
 
-    const total = teams.length
-
-    if (safeOffset >= total) {
-      return []
-    }
-
-    const end = Math.min(total, safeOffset + safeLimit)
-    const page = teams.slice(safeOffset, end)
-
-    const processedPage = page.map((team) => {
-      const apps = teamAppearances.get(team.id) ?? []
-      const country = teamCountries.get(team.countryId)
-
-      return {
-        ...team,
-        appearances: apps,
-        country
+        return collator.compare(a.id, b.id)
       }
     })
 
-    return processedPage.map((raw) =>
-      TeamModelTranslator.toDomain(raw, [ 'appearances', 'country' ])
-    )
+    const page = rows.slice(offset, offset + limit)
+
+    const processed = page.map(team => ({
+      ...team,
+      appearances: teamAppearancesIdx.get(team.id) ?? [],
+      country: teamCountriesIdx.get(team.countryId)
+    }))
+
+    const pageNumber = Math.floor(offset / limit) + 1
+    const pageCount = Math.max(1, Math.ceil(rows.length / limit))
+    const hasNext = offset + limit < rows.length
+    const hasPrev = offset > 0
+
+    return {
+      items: processed.map(raw => TeamModelTranslator.toDomain(raw, [ 'appearances','country' ])),
+      totalItems: rows.length,
+      page: pageNumber,
+      pageSize: limit,
+      pageCount,
+      hasNext,
+      hasPrev,
+    }
   }
 
   /**
-     * Get the time without trophy for a team given a competition
-     * @param teamId Team ID
-     * @param competitionId Competition ID
-     * @return Time in milliseconds (epoch millis) since last trophy if found or null
-     */
-  public async getTimeWithoutTrophy (teamId: string, competitionId: string): Promise<number | null> {
+    * Get the timestamp of the team's most recent win in the given competition.
+    * @param teamId Team ID
+    * @param competitionId Competition ID
+    * @return Timestamp (epoch millis, UTC) of the most recent win, or null if the team has never won this competition.
+    */
+  public async getLastWinTimestamp (teamId: string, competitionId: string): Promise<number | null> {
     const teamAppearance = appearances.find((appearance) =>
       appearance.teamId === teamId && appearance.competitionId === competitionId
     )
@@ -124,5 +201,63 @@ export class FileSystemTeamRepository implements TeamRepositoryInterface {
     }
 
     return teamAppearance.lastWin !== null ? teamAppearance.lastWin : teamAppearance.firstParticipation
+  }
+
+  /**
+    * Get a list of the most popular teams
+    * V1 -> Hardcoded team list
+    * @return Team array
+    */
+  public async getPopularTeams (): Promise<Array<Team>> {
+    // FIXME: V1 -> Hardcoded team list
+    const popularTeamIds: Array<string> = [
+      'team-001', 'team-002', 'team-003', 'team-004', 'team-005'
+    ]
+
+    const byId = new Map(teams.map(team => [ team.id, team ]))
+
+    const popularTeams = popularTeamIds
+      .map(id => byId.get(id))
+      .filter((team): team is typeof teams[number] => Boolean(team))
+
+    return popularTeams.map((popularTeam) => {
+      const apps = teamAppearancesIdx.get(popularTeam.id) ?? []
+      const country = teamCountriesIdx.get(popularTeam.countryId)
+
+      const rawTeam = {
+        ...popularTeam,
+        appearances: apps,
+        country
+      }
+
+      return TeamModelTranslator.toDomain(rawTeam, [ 'appearances', 'country' ])
+    })
+  }
+
+  private lastWinComparator(aId: string, bId: string, order: TeamRepositorySortDirection) {
+    const aLastWin = teamLastWin.get(aId)
+    const bLastWin = teamLastWin.get(bId)
+
+    if (aLastWin == null && bLastWin == null) {
+      return 0
+    }
+
+    if (aLastWin == null) {
+      return 1
+    }
+
+    if (bLastWin == null) {
+      return -1
+    }
+
+    const diff = bLastWin - aLastWin
+
+    return order === 'desc' ? diff : -diff
+  }
+
+  private nameComparator(aName: string, bName: string, order: TeamRepositorySortDirection) {
+    const diff = collator.compare(aName, bName)
+
+    return order === 'asc' ? diff : -diff
   }
 }

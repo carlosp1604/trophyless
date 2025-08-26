@@ -4,19 +4,21 @@ import '../../styles/global.css'
 import LanguageSwitcher from '~/src/components/LanguageSwitcher.astro'
 import { i18nConfig } from '~/i18n.config'
 import { t } from '~/translations'
- 
-
-
-import {GetLastTrophyTimestamp} from "~/modules/Team/Application/GetLastTrophyTimestamp/GetLastTrophyTimestamp"
 import {FileSystemTeamRepository} from "~/modules/Team/Infrastructure/FileSystemTeamRepository"
+import {GetTeams} from "~/modules/Team/Application/GetTeams/GetTeams"
 
 const lang = Astro.url.pathname.split('/')[1] as typeof i18nConfig.locales[number]
 
-const getTimeWithoutTrophy = new GetLastTrophyTimestamp(new FileSystemTeamRepository())
+const getTeams = new GetTeams(new FileSystemTeamRepository())
 
-const time = await getTimeWithoutTrophy.get({teamId: 'team-001', competitionId: 'la-liga'})
+const teams = await getTeams.get({
+  pageNumber: 2,
+  pageSize: 12,
+  sortOption: 'lastWin',
+  sortOrder: 'desc',
+})
 
-if (!time.success) {
+if (!teams.success) {
   // redirect 404?
   return new Response('Competition not found', { status: 404 })
 }
@@ -31,7 +33,7 @@ if (!time.success) {
     <title>Astro</title>
   </head>
   <body>
-    <p>{time.value}</p>
+    <p>{JSON.stringify(teams.value)}</p>
     <h1>{t(lang, 'home_page_title')}</h1>
     <LanguageSwitcher currentLang={lang} />
   </body>
