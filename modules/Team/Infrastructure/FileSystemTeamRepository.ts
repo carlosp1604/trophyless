@@ -6,13 +6,13 @@ import appearances from '~/data/teamAppearances.json'
 import teams from '~/data/teams.json'
 import translations from '~/data/translations.json'
 import type { CountryRawModel } from '~/modules/Country/Infrastructure/RawModels/CountryRawModel.ts'
+import type { ComparatorRepositoryInterface } from '~/modules/Shared/Domain/ComparatorRepositoryInterface.ts'
 import type { Page } from '~/modules/Shared/Domain/Page.ts'
 import type { Team } from '~/modules/Team/Domain/Team.ts'
 import type {
-  TeamRepositoryInterface,
-  TeamRepositorySortDirection
+  TeamRepositoryInterface
 } from '~/modules/Team/Domain/TeamRepositoryInterface.ts'
-import type { TeamsPage } from '~/modules/Team/Domain/TeamsPage.ts'
+import type { TeamsCriteria, TeamSortOrder } from '~/modules/Team/Domain/TeamsCriteria.ts'
 import { TranslationType } from '~/modules/Translation/Domain/Translation.ts'
 
 const collator = new Intl.Collator('es', { sensitivity: 'base', numeric: true })
@@ -49,7 +49,6 @@ for (const team of teams) {
   teamLastWin.set(team.id, sorted[0]?.lastWin ?? null)
 }
 
-
 type TranslationRaw = typeof translations[number]
 const countryTranslationsIdx = new Map<string, TranslationRaw[]>()
 
@@ -78,6 +77,9 @@ for (const t of teams) {
 }
 
 export class FileSystemTeamRepository implements TeamRepositoryInterface {
+  constructor(private readonly comparatorRepository: ComparatorRepositoryInterface) {
+  }
+
   /**
    * Get a Team given its ID
    * @param teamId Team ID
@@ -116,8 +118,8 @@ export class FileSystemTeamRepository implements TeamRepositoryInterface {
     * @param criteria Team Criteria
     * @return Teams page
     */
-  public async getTeams (criteria: TeamsPage): Promise<Page<Team>> {
-    const { pagination: { offset, limit }, sort, countryId, competitionId } = criteria
+  public async getTeams (criteria: TeamsCriteria): Promise<Page<Team>> {
+    const { pagination: { offset, limit }, sort, countryId, competitionId, locale } = criteria
 
     let rows = [ ...teams ]
 
@@ -137,7 +139,7 @@ export class FileSystemTeamRepository implements TeamRepositoryInterface {
           return byLast
         }
 
-        const byName = this.nameComparator(a.name, b.name, 'asc')
+        const byName = this.comparatorRepository.nameComparator(a.name, b.name, 'asc', locale)
 
         if (byName !== 0) {
           return byName
@@ -145,7 +147,7 @@ export class FileSystemTeamRepository implements TeamRepositoryInterface {
 
         return collator.compare(a.id, b.id)
       } else {
-        const byName = this.nameComparator(a.name, b.name, sort.order)
+        const byName = this.comparatorRepository.nameComparator(a.name, b.name, sort.order, locale)
 
         if (byName !== 0) {
           return byName
@@ -234,30 +236,10 @@ export class FileSystemTeamRepository implements TeamRepositoryInterface {
     })
   }
 
-  private lastWinComparator(aId: string, bId: string, order: TeamRepositorySortDirection) {
+  private lastWinComparator(aId: string, bId: string, order: TeamSortOrder) {
     const aLastWin = teamLastWin.get(aId)
     const bLastWin = teamLastWin.get(bId)
 
-    if (aLastWin == null && bLastWin == null) {
-      return 0
-    }
-
-    if (aLastWin == null) {
-      return 1
-    }
-
-    if (bLastWin == null) {
-      return -1
-    }
-
-    const diff = bLastWin - aLastWin
-
-    return order === 'desc' ? diff : -diff
-  }
-
-  private nameComparator(aName: string, bName: string, order: TeamRepositorySortDirection) {
-    const diff = collator.compare(aName, bName)
-
-    return order === 'asc' ? diff : -diff
+    return this.comparatorRepository.numberComparator(aLastWin, bLastWin, order)
   }
 }

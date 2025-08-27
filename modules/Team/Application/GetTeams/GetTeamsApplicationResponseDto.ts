@@ -1,7 +1,7 @@
-import type { TeamApplicationResponseDto } from '~/modules/Team/Application/TeamApplicationResponseDto.ts'
+import type { TeamApplicationDto } from '~/modules/Team/Application/TeamApplicationDto.ts'
 
 export interface GetTeamsApplicationResponseDto {
-  teams: Array<TeamApplicationResponseDto>
+  teams: Array<TeamApplicationDto>
   totalItems: number
   page: number
   pageSize: number

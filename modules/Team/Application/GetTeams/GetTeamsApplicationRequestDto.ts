@@ -3,4 +3,7 @@ export interface GetTeamsApplicationRequestDto {
   pageSize: number
   sortOption: string
   sortOrder: string
+  locale: string
+  competitionId: string | undefined
+  countryId: string | undefined
 }

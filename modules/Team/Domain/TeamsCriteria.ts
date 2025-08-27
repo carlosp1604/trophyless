@@ -1,5 +1,5 @@
 export type TeamSortBy = 'name' | 'lastWin'
-export type SortOrder  = 'asc' | 'desc'
+export type TeamSortOrder = 'asc' | 'desc'
 
 export class Pagination {
   private constructor(public readonly offset: number, public readonly limit: number) {
@@ -14,23 +14,24 @@ export class Pagination {
 }
 
 export class Sort {
-  private constructor(public readonly by: TeamSortBy, public readonly order: SortOrder) {
+  private constructor(public readonly by: TeamSortBy, public readonly order: TeamSortOrder) {
   }
 
   static create(by?: unknown, order?: unknown) {
     const validateBy: TeamSortBy = by === 'lastWin' ? 'lastWin' : 'name'
-    const validatedOrder: SortOrder  = order === 'asc' ? 'asc' : 'desc'
+    const validatedOrder: TeamSortOrder  = order === 'asc' ? 'asc' : 'desc'
 
     return new Sort(validateBy, validatedOrder)
   }
 }
 
-export class TeamsPage {
+export class TeamsCriteria {
   private constructor(
     public readonly pagination: Pagination,
     public readonly sort: Sort,
     public readonly countryId?: string,
     public readonly competitionId?: string,
+    public readonly locale?: string
   ) {
   }
 
@@ -41,12 +42,14 @@ export class TeamsPage {
     sortOrder?: unknown
     countryId?: string
     competitionId?: string
+    locale?: string
   }) {
-    return new TeamsPage(
+    return new TeamsCriteria(
       Pagination.fromPage(args.page, args.size),
       Sort.create(args.sortBy, args.sortOrder),
       args.countryId,
       args.competitionId,
+      args.locale,
     )
   }
 }

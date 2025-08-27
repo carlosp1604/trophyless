@@ -4,20 +4,23 @@
     "name": "La Liga",
     "type": "league",
     "imageUrl": "/competitions/la-liga.png",
-    "countryId": "country-es"
+    "countryId": "country-es",
+    "relevance": 2
   },
   {
     "id": "premier-league",
     "name": "Premier League",
     "type": "league",
     "imageUrl": "/competitions/premier-league.png",
-    "countryId": "country-en"
+    "countryId": "country-en",
+    "relevance": 3
   },
   {
     "id": "champions-league",
     "name": "Champions League",
     "type": "international",
     "imageUrl": "/competitions/champions-league.png",
-    "countryId": "country-eu"
+    "countryId": "country-eu",
+    "relevance": 10
   }
 ]

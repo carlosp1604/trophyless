@@ -1,12 +1,8 @@
 import type { Team } from './Team.ts'
 import type { Page } from '~/modules/Shared/Domain/Page.ts'
-import type { TeamsPage } from '~/modules/Team/Domain/TeamsPage.ts'
+import type { TeamsCriteria } from '~/modules/Team/Domain/TeamsCriteria.ts'
 
 export type TeamRepositoryRelationshipOptions = 'appearances' | 'country'
-
-export type TeamRepositorySortOptions = 'name' | 'lastWin'
-
-export type TeamRepositorySortDirection = 'asc' | 'desc'
 
 export interface TeamRepositoryInterface {
   /**
@@ -21,7 +17,7 @@ export interface TeamRepositoryInterface {
    * @param criteria Team Criteria
    * @return Teams page
    */
-  getTeams (criteria: TeamsPage): Promise<Page<Team>>
+  getTeams (criteria: TeamsCriteria): Promise<Page<Team>>
 
   /**
     * Get the timestamp of the team's most recent win in the given competition.

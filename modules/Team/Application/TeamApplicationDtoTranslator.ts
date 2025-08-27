@@ -1,10 +1,10 @@
-import type { TeamApplicationResponseDto } from './TeamApplicationResponseDto.ts'
+import type { TeamApplicationDto } from './TeamApplicationDto.ts'
 import { CountryApplicationDtoTranslator } from '~/modules/Country/Application/CountryApplicationDtoTranslator.ts'
 import { TeamAppearanceApplicationDtoTranslator } from '~/modules/Team/Application/TeamAppearanceApplicationDtoTranslator.ts'
 import type { Team } from '~/modules/Team/Domain/Team.ts'
 
-export class TeamApplicationResponseDtoTranslator {
-  public static fromDomain (domain: Team): TeamApplicationResponseDto {
+export class TeamApplicationDtoTranslator {
+  public static fromDomain (domain: Team): TeamApplicationDto {
     return {
       id: domain.id,
       name: domain.name,

@@ -4,21 +4,25 @@ import '../../styles/global.css'
 import LanguageSwitcher from '~/src/components/LanguageSwitcher.astro'
 import { i18nConfig } from '~/i18n.config'
 import { t } from '~/translations'
-import {FileSystemTeamRepository} from "~/modules/Team/Infrastructure/FileSystemTeamRepository"
-import {GetTeams} from "~/modules/Team/Application/GetTeams/GetTeams"
+import {NodeComparatorRepository} from "~/modules/Shared/Infrastructure/NodeComparatorRepository"
+import {GetCompetitions} from "~/modules/Competition/Application/GetCompetitions"
+import {
+  FileSystemCompetitionRepository
+} from "~/modules/Competition/Infrastructure/FileSystemCompetitionRepository"
 
 const lang = Astro.url.pathname.split('/')[1] as typeof i18nConfig.locales[number]
 
-const getTeams = new GetTeams(new FileSystemTeamRepository())
+const getCompetitions = new GetCompetitions(new FileSystemCompetitionRepository(new NodeComparatorRepository()))
 
-const teams = await getTeams.get({
+const competitions = await getCompetitions.get({
   pageNumber: 2,
   pageSize: 12,
-  sortOption: 'lastWin',
+  sortOption: 'relevance',
   sortOrder: 'desc',
+  locale: String(lang),
 })
 
-if (!teams.success) {
+if (!competitions.success) {
   // redirect 404?
   return new Response('Competition not found', { status: 404 })
 }
@@ -33,7 +37,7 @@ if (!teams.success) {
     <title>Astro</title>
   </head>
   <body>
-    <p>{JSON.stringify(teams.value)}</p>
+    <p>{JSON.stringify(competitions.value)}</p>
     <h1>{t(lang, 'home_page_title')}</h1>
     <LanguageSwitcher currentLang={lang} />
   </body>
