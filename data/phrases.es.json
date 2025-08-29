@@ -1,0 +1,34 @@
+[
+  {
+    "id": "never_won",
+    "minDays": 0,
+    "templates": [
+      "Tu equipo jamás ha ganado este torneo… algún día llegará.",
+      "Aún no conocéis la gloria en esta competición."
+    ]
+  },
+  {
+    "id": "today",
+    "minDays": 0,
+    "templates": [
+      "Tranquilo, lo ganasteis hoy mismo 🎉",
+      "No hace falta llorar, sois los campeones actuales."
+    ]
+  },
+  {
+    "id": "week",
+    "minDays": 7,
+    "templates": [
+      "Han pasado apenas {days} días desde el último título.",
+      "Una semana sin títulos… ¿lo soportarás?"
+    ]
+  },
+  {
+    "id": "year",
+    "minDays": 365,
+    "templates": [
+      "Ya va más de un año ({years} años) sin levantar un trofeo.",
+      "Otro aniversario sin títulos para {team}."
+    ]
+  }
+]

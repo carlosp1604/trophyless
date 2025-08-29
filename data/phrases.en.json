@@ -1,0 +1,34 @@
+[
+  {
+    "id": "never_won",
+    "minDays": 0,
+    "templates": [
+      "Your team has never won this competition… maybe one day.",
+      "Still waiting for that first taste of glory."
+    ]
+  },
+  {
+    "id": "today",
+    "minDays": 0,
+    "templates": [
+      "Relax, you just won it today 🎉",
+      "No worries, you're still the reigning champions."
+    ]
+  },
+  {
+    "id": "week",
+    "minDays": 7,
+    "templates": [
+      "It's only been {days} days since the last trophy.",
+      "One week without silverware… can you endure it?"
+    ]
+  },
+  {
+    "id": "year",
+    "minDays": 365,
+    "templates": [
+      "It's been over a year ({years} years) without a trophy.",
+      "Another anniversary without titles for {team}."
+    ]
+  }
+]
