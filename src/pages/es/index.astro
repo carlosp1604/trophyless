@@ -15,7 +15,7 @@ const lang = Astro.url.pathname.split('/')[1] as typeof i18nConfig.locales[numbe
 const getCompetitions = new GetCompetitions(new FileSystemCompetitionRepository(new NodeComparatorRepository()))
 
 const competitions = await getCompetitions.get({
-  pageNumber: 2,
+  pageNumber: 1,
   pageSize: 12,
   sortOption: 'relevance',
   sortOrder: 'desc',

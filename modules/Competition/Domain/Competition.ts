@@ -1,5 +1,6 @@
 import { Country } from '~/modules/Country/Domain/Country.ts'
 import { Relationship } from '~/modules/Shared/Domain/Relationship.ts'
+import type { Team } from '~/modules/Team/Domain/Team.ts'
 
 export class Competition {
   public readonly id: string
@@ -10,6 +11,7 @@ export class Competition {
 
   /** Relationships **/
   private readonly _country: Relationship<Country>
+  private readonly _currentChampion: Relationship<Team>
 
   constructor(
     id: string,
@@ -17,7 +19,8 @@ export class Competition {
     type: string,
     imageUrl: string,
     countryId: string,
-    country: Relationship<Country> = Relationship.notLoaded()
+    country: Relationship<Country> = Relationship.notLoaded(),
+    currentChampion: Relationship<Team> = Relationship.notLoaded()
   ) {
     this.id = id
     this.name = name
@@ -25,9 +28,14 @@ export class Competition {
     this.imageUrl = imageUrl
     this.countryId = countryId
     this._country = country
+    this._currentChampion = currentChampion
   }
 
   public get country (): Country {
     return this._country.value as Country
+  }
+
+  public get currentChampion(): Team {
+    return this._currentChampion.value as Team
   }
 }

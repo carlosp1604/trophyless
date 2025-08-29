@@ -4,10 +4,13 @@ import type { CompetitionRawModel } from '~/modules/Competition/Infrastructure/C
 import { Country } from '~/modules/Country/Domain/Country.ts'
 import { CountryModelTranslator } from '~/modules/Country/Infrastructure/CountryModelTranslator.ts'
 import { Relationship } from '~/modules/Shared/Domain/Relationship.ts'
+import type { Team } from '~/modules/Team/Domain/Team.ts'
+import { TeamModelTranslator } from '~/modules/Team/Infrastructure/TeamModelTranslator.ts'
 
 export class CompetitionModelTranslator {
   public static toDomain(rawModel: CompetitionRawModel, options: Array<CompetitionRepositoryOptions>): Competition {
     let countryRelationship: Relationship<Country> = Relationship.notLoaded()
+    let currentChampionRelationship: Relationship<Team> = Relationship.notLoaded()
 
     if (options.includes('country')) {
       if (rawModel.country) {
@@ -17,13 +20,20 @@ export class CompetitionModelTranslator {
       }
     }
 
+    if (options.includes('currentChampion') && rawModel.currentChampion) {
+      const domainModel = TeamModelTranslator.toDomain(rawModel.currentChampion,  [ 'country' ])
+
+      currentChampionRelationship = Relationship.initializeRelation(domainModel)
+    }
+
     return new Competition(
       rawModel.id,
       rawModel.name,
       rawModel.type,
       rawModel.imageUrl,
       rawModel.countryId,
-      countryRelationship
+      countryRelationship,
+      currentChampionRelationship
     )
   }
 }
